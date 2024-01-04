@@ -1,0 +1,39 @@
+﻿@page "/todo"
+@using ToDoListApp.Data.Models;
+
+<h3>To Do List</h3>
+
+<EditForm Model="task" class="form-inline" OnValidSubmit="AddTask">
+    <input class="form-control-sm mx-2" type="text" @bind-value="task.TaskName" />
+    <button class="btn-sm btn-outline-primary">Add Task</button>
+</EditForm>
+
+<ul class="list-group my-2">
+    @foreach (var task in tasks)
+    {
+        if (task.IsComplete)
+        {
+            <li class="list-group-item list-group-item-success mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)"><del>@task.TaskName</del></li>
+
+        }
+        else
+        {
+            <li class="list-group-item list-group-item-secondary mx-1">@task.TaskName</li>
+
+        }
+    }
+
+</ul>
+
+
+@code {
+    //C# Code
+
+    protected List<TaskModel> tasks = new List<TaskModel>();
+    protected TaskModel task = new TaskModel();
+    private void AddTask()
+    {
+        tasks.Add(task);
+        task = new TaskModel();
+    }
+}
