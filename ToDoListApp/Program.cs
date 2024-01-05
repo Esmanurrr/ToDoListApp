@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using System;
 using ToDoListApp.Data;
+using ToDoListApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+builder.Services.AddScoped<ITaskModelService, TaskModelService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default") ?? throw new NullReferenceException("No connection string in config!");
 
