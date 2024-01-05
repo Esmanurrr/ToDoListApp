@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using ToDoListApp.Data.Models;
 
 namespace ToDoListApp.Data
