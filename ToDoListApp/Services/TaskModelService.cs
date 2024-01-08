@@ -6,16 +6,24 @@ namespace ToDoListApp.Services
 {
     public class TaskModelService : ITaskModelService
     {
-        private readonly IDbContextFactory<AppDbContext> _context;
+        private readonly AppDbContext _context;
 
-        public TaskModelService(IDbContextFactory<AppDbContext> context)
+        public TaskModelService(AppDbContext context)
         {
             _context = context;
         }
 
-        public void AddTask(TaskModel task)
+        public async Task AddAsync(TaskModel task)
         {
+            await _context.AddAsync(task);
+            _context.SaveChanges();
 
+        }
+
+        public List<TaskModel> GetAllTask()
+        {
+            var tasks = _context.TaskModels.ToList();
+            return tasks;
         }
     }
 }
