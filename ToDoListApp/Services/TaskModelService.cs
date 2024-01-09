@@ -13,9 +13,9 @@ namespace ToDoListApp.Services
             _context = context;
         }
 
-        public async Task AddAsync(TaskModel task)
+        public void Add(TaskModel task)
         {
-            await _context.AddAsync(task);
+             _context.Add(task);
             _context.SaveChanges();
 
         }
@@ -24,6 +24,15 @@ namespace ToDoListApp.Services
         {
             var tasks = _context.TaskModels.ToList();
             return tasks;
+        }
+
+        public void Update(int id,string title)
+        {
+            var task = _context.TaskModels.FirstOrDefault(x => x.Id == id);
+            task.TaskName = title;
+            _context.TaskModels.Update(task);
+            _context.SaveChanges();
+
         }
     }
 }

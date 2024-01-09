@@ -5,6 +5,7 @@ namespace ToDoListApp.Services
     public interface ITaskModelService
     {
         List<TaskModel> GetAllTask();
-        Task AddAsync(TaskModel task);
+        void Add(TaskModel task);
+        void Update(int id, string title);
     }
 }

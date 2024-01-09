@@ -1,39 +1,167 @@
 ﻿@page "/todo"
-@using ToDoListApp.Data.Models;
+@inject ITaskModelService taskService
 
-<h3>To Do List</h3>
 
-<EditForm Model="task" class="form-inline" OnValidSubmit="AddTask">
-    <input class="form-control-sm mx-2" type="text" @bind-value="task.TaskName" />
-    <button class="btn-sm btn-outline-primary">Add Task</button>
-</EditForm>
 
-<ul class="list-group my-2">
-    @foreach (var task in tasks)
-    {
-        if (task.IsComplete)
-        {
-            <li class="list-group-item list-group-item-success mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)"><del>@task.TaskName</del></li>
 
-        }
-        else
-        {
-            <li class="list-group-item list-group-item-secondary mx-1">@task.TaskName</li>
+<div class="row">
+    <div class="col-md-4">
+        <h3 class="mt-4">To Do</h3>
+        <EditForm Model="newTask" class="form-inline mb-3" OnValidSubmit="AddTask">
+            <input class="form-control mr-2" type="text" @bind-value="newTask.TaskName" />
+            <button class="btn btn-outline-primary">Add Task</button>
+        </EditForm>
 
-        }
-    }
+        <ul class="list-group">
+            @foreach (var task in tasks)
+            {
+                <li class="@GetTaskClass(task) list-group-item d-flex justify-content-between align-items-center" onclick="()=>ToggleTaskCompletion(task)">
+                    @if (task.IsComplete)
+                    {
+                    <li class="list-group-item list-group-item-success mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)"><del>@task.TaskName</del></li>
+                    }
+                    else
+                    {
+                        @if (task == selectedTask)
+                        {
+                            <input class="form-control" @bind="task.TaskName" @onblur="()=>FinishEditing(task)" />
+                        }
+                        else
+                        {
+                             <li class="list-group-item list-group-item-secondary mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)">@task.TaskName</li>
+                        }
+                    }
+                    <button @onclick="()=>StartEditing(task)" class="btn btn-primary btn-sm ml-2 float-right">Edit</button>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h3 class="mt-4">Doing</h3>
+        <EditForm Model="newTask" class="form-inline mb-3" OnValidSubmit="AddTask">
+            <input class="form-control mr-2" type="text" @bind-value="newTask.TaskName" />
+            <button class="btn btn-outline-primary">Add Task</button>
+        </EditForm>
 
-</ul>
+        <ul class="list-group">
+            @foreach (var task in tasks)
+            {
+                <li class="@GetTaskClass(task) list-group-item d-flex justify-content-between align-items-center" onclick="()=>ToggleTaskCompletion(task)">
+                    @if (task.IsComplete)
+                    {
+                    <li class="list-group-item list-group-item-success mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)"><del>@task.TaskName</del></li>
+                    }
+                    else
+                    {
+                        @if (task == selectedTask)
+                        {
+                        <input class="form-control" @bind="task.TaskName" @onblur="()=>FinishEditing(task)" />
+                        }
+                        else
+                        {
+                        <li class="list-group-item list-group-item-secondary mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)">@task.TaskName</li>
+                        }
+                    }
+                <button @onclick="()=>StartEditing(task)" class="btn btn-primary btn-sm ml-2 float-right">Edit</button>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h3 class="mt-4">Done</h3>
+        <EditForm Model="newTask" class="form-inline mb-3" OnValidSubmit="AddTask">
+            <input class="form-control mr-2" type="text" @bind-value="newTask.TaskName" />
+            <button class="btn btn-outline-primary">Add Task</button>
+        </EditForm>
 
+        <ul class="list-group">
+            @foreach (var task in tasks)
+            {
+                <li class="@GetTaskClass(task) list-group-item d-flex justify-content-between align-items-center" onclick="()=>ToggleTaskCompletion(task)">
+                    @if (task.IsComplete)
+                    {
+                    <li class="list-group-item list-group-item-success mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)"><del>@task.TaskName</del></li>
+                    }
+                    else
+                    {
+                        @if (task == selectedTask)
+                        {
+                        <input class="form-control" @bind="task.TaskName" @onblur="()=>FinishEditing(task)" />
+                        }
+                        else
+                        {
+                        <li class="list-group-item list-group-item-secondary mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)">@task.TaskName</li>
+                        }
+                    }
+                <button @onclick="()=>StartEditing(task)" class="btn btn-primary btn-sm ml-2 float-right">Edit</button>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@* @if (selectedTask != null)
+{
+    <EditForm Model="selectedTask" OnValidSubmit="UpdateTask">
+        <input class="form-control-sm mx-2" type="text" @bind-value="selectedTask.TaskName" />
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+} *@
 
 @code {
     //C# Code
-
     protected List<TaskModel> tasks = new List<TaskModel>();
-    protected TaskModel task = new TaskModel();
-    private void AddTask()
+    protected TaskModel newTask = new TaskModel();
+    protected TaskModel selectedTask = null;
+
+    protected override void OnInitialized()
     {
-        tasks.Add(task);
-        task = new TaskModel();
+        tasks = taskService.GetAllTask();
     }
+
+    void AddTask()
+    {
+        taskService.Add(newTask);
+        tasks = taskService.GetAllTask(); // Update the tasks list after adding a new task
+        newTask = new TaskModel(); // Clear the task input after adding
+    }
+
+
+    void ToggleTaskCompletion(TaskModel task)
+    {
+        task.IsComplete = !task.IsComplete;
+        // Optionally, you can update the task in the database here
+    }
+
+    void EditTask(TaskModel task)
+    {
+        // Set the selected task for editing
+        selectedTask = task;
+    }
+
+    // void UpdateTask()
+    // {
+    //     // Update the selectedTask in the database
+        
+    //     // Clear the selectedTask after updating
+    //     selectedTask = null;
+    // }
+
+    void StartEditing(TaskModel task)
+    {
+        selectedTask = task;
+    }
+
+    void FinishEditing(TaskModel task)
+    {
+        selectedTask = null;
+        taskService.Update(task.Id, task.TaskName);
+        // Optionally, you can update the task in the database here
+    }
+
+    string GetTaskClass(TaskModel task)
+    {
+        return task.IsComplete ? "list-group-item list-group-item-success mx-1" : "list-group-item list-group-item-secondary mx-1";
+    }
+
 }
