@@ -10,10 +10,10 @@
             <button class="btn btn-outline-primary">Add Task</button>
         </EditForm>
 
-        <ul class="list-group" >
+        <ul class="list-group">
             @foreach (var task in tasks)
             {
-                <li class="@GetTaskClass(task) list-group-item d-flex justify-content-between align-items-center" AllowDragAndDrop="true" onclick="()=>ToggleTaskCompletion(task)">
+                <li class="@GetTaskClass(task) list-group-item d-flex justify-content-between align-items-center" onclick="()=>ToggleTaskCompletion(task)">
                     @if (task.IsComplete)
                     {
                     <li class="list-group-item list-group-item-success mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)"><del>@task.TaskName</del></li>
@@ -22,15 +22,15 @@
                     {
                         @if (task == selectedTask)
                         {
-                            <input class="form-control" @bind="task.TaskName" @onblur="()=>FinishEditing(task)" />
+                        <input class="form-control" @bind="task.TaskName" @onblur="()=>FinishEditing(task)" />
                         }
                         else
                         {
-                             <li class="list-group-item list-group-item-secondary mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)">@task.TaskName</li>
+                        <li class="list-group-item list-group-item-secondary mx-1" @onclick="(()=> task.IsComplete = !task.IsComplete)">@task.TaskName</li>
                         }
                     }
-                    <button @onclick="()=>StartEditing(task)" class="btn btn-primary btn-sm ml-2 float-right">Edit</button>
-                    <button @onclick="()=>DeleteTask(task.Id)" class="btn btn-danger btn-sm ml-2 float-right">Delete</button>
+                <button @onclick="()=>StartEditing(task)" class="btn btn-primary btn-sm ml-2 float-right">Edit</button>
+                <button @onclick="()=>DeleteTask(task.Id)" class="btn btn-danger btn-sm ml-2 float-right">Delete</button>
                 </li>
             }
         </ul>
@@ -63,6 +63,7 @@
 
     void AddTask()
     {
+        taskService.Add(newTask);
         tasks = taskService.GetAllTask(); // Update the tasks list after adding a new task
         newTask = new TaskModel(); // Clear the task input after adding
     }
