@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using ToDoListApp.Data;
 using ToDoListApp.Data.Models;
 
@@ -15,9 +16,15 @@ namespace ToDoListApp.Services
 
         public void Add(TaskModel task)
         {
-             _context.Add(task);
+            _context.Add(task);
             _context.SaveChanges();
+        }
 
+        public void Delete(int id)
+        {
+            var task = _context.TaskModels.FirstOrDefault(x => x.Id == id);
+            _context.TaskModels.Remove(task);
+            _context.SaveChanges();
         }
 
         public List<TaskModel> GetAllTask()
@@ -26,13 +33,15 @@ namespace ToDoListApp.Services
             return tasks;
         }
 
-        public void Update(int id,string title)
+        public void UpdateTask(TaskModel task)
         {
-            var task = _context.TaskModels.FirstOrDefault(x => x.Id == id);
-            task.TaskName = title;
-            _context.TaskModels.Update(task);
-            _context.SaveChanges();
-
+            var existingTask = _context.TaskModels.FirstOrDefault(t => t.Id == task.Id);
+            if (existingTask != null)
+            {
+                existingTask.TaskName = task.TaskName;
+                existingTask.IsComplete = task.IsComplete;
+                _context.SaveChanges();
+            }
         }
     }
 }

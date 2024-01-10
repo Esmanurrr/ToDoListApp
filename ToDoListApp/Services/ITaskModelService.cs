@@ -6,6 +6,7 @@ namespace ToDoListApp.Services
     {
         List<TaskModel> GetAllTask();
         void Add(TaskModel task);
-        void Update(int id, string title);
+        void UpdateTask(TaskModel task);
+        void Delete(int id);
     }
 }

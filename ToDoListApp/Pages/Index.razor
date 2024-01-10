@@ -1,9 +1,14 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<div class="row">
+    <div class="col-md-4">
+        <ToDoListApp.Pages.Components.ToDo HeaderName="To Do"></ToDoListApp.Pages.Components.ToDo>
+    </div>
+    <div class="col-md-4">
+        <ToDoListApp.Pages.Components.ToDo HeaderName="Doing"></ToDoListApp.Pages.Components.ToDo>
+    </div>
+    <div class="col-md-4">
+        <ToDoListApp.Pages.Components.ToDo HeaderName="Done"></ToDoListApp.Pages.Components.ToDo>
+    </div>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+</div>

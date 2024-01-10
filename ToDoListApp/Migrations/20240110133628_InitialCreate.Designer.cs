@@ -11,7 +11,7 @@ using ToDoListApp.Data;
 namespace ToDoListApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240109234236_InitialCreate")]
+    [Migration("20240110133628_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -34,10 +34,6 @@ namespace ToDoListApp.Migrations
 
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TaskName")
                         .IsRequired()
